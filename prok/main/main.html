@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCollection - Каталог пород кошек и собак</title>
+    <style>
+        :root {
+            --primary: #54DB63;
+            --secondary: #4F46E5;
+            --accent: #000000;
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --text-light: #f0f0f0;
+            --text-gray: #a0a0a0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                radial-gradient(circle at 25% 25%, white 2px, transparent 2.5px),
+                radial-gradient(circle at 75% 75%, white 2px, transparent 2.5px);
+            background-size: 50px 50px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            padding: 50px 0;
+        }
+        
+        .animal-selection {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: stretch;
+        }
+        
+        .animal-card {
+            flex: 1;
+            background: var(--card-dark);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            min-height: 450px;
+        }
+        
+        .animal-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary);
+        }
+        
+        .animal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(84, 219, 99, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .animal-card:hover::before {
+            left: 100%;
+        }
+        
+        .animal-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        
+        .animal-title {
+            font-size: 2.2rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        .animal-description {
+            color: var(--text-gray);
+            margin-bottom: 25px;
+            flex-grow: 1;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(84, 219, 99, 0.3);
+            margin-top: auto;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(84, 219, 99, 0.4);
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            flex: 1;
+            min-width: 250px;
+            background: var(--card-dark);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+        
+        .feature-description {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+        
+        .animated-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            margin: 25px auto;
+            display: block;
+            transition: all 0.5s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .animated-image:hover {
+            transform: scale(1.08) rotate(2deg);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        footer {
+            background-color: #0a0a0a;
+            color: var(--text-gray);
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        @media (max-width: 768px) {
+            .animal-selection {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .animal-card {
+                max-width: 100%;
+                min-height: 450px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .animal-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-pattern"></div>
+        <div class="container">
+            <h1>PetCollection</h1>
+            <p class="subtitle">Большая коллекция пород кошек и собак с фотографиями и описаниями</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <section class="animal-selection">
+                <div class="animal-card" id="catCard">
+                    <div class="animal-icon">🐱</div>
+                    <h3 class="animal-title">Кошки</h3>
+                    <p class="animal-description">Исследуйте нашу обширную коллекцию пород кошек. Узнайте о характере, особенностях ухода и посмотрите качественные фотографии каждой породы.</p>
+                    <a href="catss.html" class="btn">Смотреть породы</a>
+                </div>
+                
+                <div class="animal-card" id="dogCard">
+                    <div class="animal-icon">🐶</div>
+                    <h3 class="animal-title">Собаки</h3>
+                    <p class="animal-description">Откройте для себя разнообразие пород собак. Подробные описания, характеристики и фотографии помогут вам выбрать идеального питомца.</p>
+                    <a href="#" class="btn">Смотреть породы</a>
+                </div>
+            </section>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3 class="feature-title">Большая коллекция</h3>
+                    <p class="feature-description">Более 200 пород кошек и собак с подробными описаниями и характеристиками</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🖼️</div>
+                    <h3 class="feature-title">Качественные фото</h3>
+                    <p class="feature-description">Каждая порода представлена множеством качественных фотографий в высоком разрешении</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h3 class="feature-title">Подробные описания</h3>
+                    <p class="feature-description">Узнайте о характере, уходе, здоровье и особенностях каждой породы</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 PetCollection. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Анимация при наведении на карточки животных
+            const animalCards = document.querySelectorAll('.animal-card');
+            
+            animalCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-12px)';
+                    this.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.4)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.3)';
+                });
+            });
+            
+            // Анимация кнопок
+            const buttons = document.querySelectorAll('.btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px) scale(1.05)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

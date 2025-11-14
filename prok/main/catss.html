@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCollection - Породы кошек</title>
+    <style>
+        :root {
+            --primary: #54DB63;
+            --secondary: #4F46E5;
+            --accent: #000000;
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --text-light: #f0f0f0;
+            --text-gray: #a0a0a0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .home-link-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .home-link-container:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .header-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                radial-gradient(circle at 25% 25%, white 2px, transparent 2.5px),
+                radial-gradient(circle at 75% 75%, white 2px, transparent 2.5px);
+            background-size: 50px 50px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .page-info {
+            text-align: center;
+            padding: 40px 0 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .page-info h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .page-info p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        .search-section {
+            padding: 20px 0 40px;
+            text-align: center;
+        }
+        
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            background: var(--card-dark);
+            border: 2px solid #444;
+            border-radius: 50px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(84, 219, 99, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: var(--text-gray);
+        }
+        
+        .breeds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 20px 0 60px;
+        }
+        
+        .breed-card {
+            background: var(--card-dark);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .breed-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary);
+        }
+        
+        .breed-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .breed-name {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .breed-origin {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .breed-description {
+            color: var(--text-gray);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .breed-features {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            background-color: #0a0a0a;
+            color: var(--text-gray);
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .page-title {
+                font-size: 1.7rem;
+            }
+            
+            .breeds-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-info h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <div class="header-pattern"></div>
+        <div class="header-content">
+            <h1 class="page-title">PetCollection - Cats</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section class="page-info">
+            <h2>Коллекция пород кошек</h2>
+            <p>Откройте для себя удивительный мир кошачьих пород. Каждая порода обладает уникальным характером, внешностью и особенностями ухода. Найдите идеального пушистого друга!</p>
+        </section>
+        
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Поиск породы по названию...">
+                <div class="search-icon">🔍</div>
+            </div>
+        </section>
+        
+        <div class="breeds-grid" id="breedsContainer">
+            <!-- Блоки пород будут добавляться через JavaScript -->
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 PetCollection. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Функция для перехода на главную страницу
+        function goToMainPage() {
+            // Пробуем разные варианты на случай если один не сработает
+            try {
+                // Вариант 1: Простой переход
+                window.location.href = 'index.html';
+            } catch (e) {
+                try {
+                    // Вариант 2: Через assign
+                    window.location.assign('index.html');
+                } catch (e2) {
+                    try {
+                        // Вариант 3: Через replace
+                        window.location.replace('index.html');
+                    } catch (e3) {
+                        // Вариант 4: Абсолютный путь
+                        window.location.href = window.location.origin + '/index.html';
+                    }
+                }
+            }
+        }
+
+        // Данные о породах кошек
+        const catBreeds = [
+            {
+                name: "Сиамская",
+                origin: "Тайланд",
+                image: "cats/siamskaia.jpg",
+                description: "Элегантная кошка с ярко-голубыми глазами и характерным окрасом. Очень общительная и разговорчивая.",
+                features: {
+                    activity: "Высокая",
+                    care: "Средний",
+                    friendliness: "Высокая"
+                }
+            },
+            {
+                name: "Мейн-кун",
+                origin: "США",
+                image: "cats/may-koon.jpg",
+                description: "Одна из самых крупных пород кошек. Дружелюбные, умные и отличные охотники.",
+                features: {
+                    activity: "Средняя",
+                    care: "Высокий",
+                    friendliness: "Высокая"
+                }
+            },
+            {
+                name: "Персидская",
+                origin: "Иран",
+                image: "cats/persidkaai.jpg",
+                description: "Пушистая красавица с приплюснутой мордочкой. Спокойная и ласковая, идеальна для квартиры.",
+                features: {
+                    activity: "Низкая",
+                    care: "Высокий",
+                    friendliness: "Высокая"
+                }
+            },
+            {
+                name: "Британская короткошерстная",
+                origin: "Великобритания",
+                image: "cats/british.jpg",
+                description: "Крепкая кошка с плюшевой шерстью. Независимая, но преданная своим хозяевам.",
+                features: {
+                    activity: "Низкая",
+                    care: "Низкий",
+                    friendliness: "Средняя"
+                }
+            },
+            {
+                name: "Сфинкс",
+                origin: "Канада",
+                image: "cats/sfinks.jpg",
+                description: "Бесшерстная порода с необычной внешностью. Очень теплолюбивая и общительная.",
+                features: {
+                    activity: "Высокая",
+                    care: "Высокий",
+                    friendliness: "Высокая"
+                }
+            },
+            {
+                name: "Бенгальская",
+                origin: "США",
+                image: "cats/bengals.jpg",
+                description: "Экзотическая кошка с леопардовым окрасом. Активная, игривая и любознательная.",
+                features: {
+                    activity: "Очень высокая",
+                    care: "Средний",
+                    friendliness: "Высокая"
+                }
+            },
+            {
+                name: "Бенгальская",
+                origin: "США",
+                image: "cats/bengals.jpg",
+                description: "Экзотическая кошка с леопардовым окрасом. Активная, игривая и любознательная.",
+                features: {
+                    activity: "Очень высокая",
+                    care: "Средний",
+                    friendliness: "Высокая"
+                }
+            }
+        ];
+
+        // Функция для отображения пород
+        function displayBreeds(breeds) {
+            const container = document.getElementById('breedsContainer');
+            container.innerHTML = '';
+            
+            breeds.forEach(breed => {
+                const breedCard = document.createElement('div');
+                breedCard.className = 'breed-card';
+                breedCard.innerHTML = `
+                    <img src="${breed.image}" alt="${breed.name}" class="breed-image">
+                    <h3 class="breed-name">${breed.name}</h3>
+                    <div class="breed-origin">📍 ${breed.origin}</div>
+                    <p class="breed-description">${breed.description}</p>
+                    <div class="breed-features">
+                        <div class="feature">⚡ ${breed.features.activity}</div>
+                        <div class="feature">💆 ${breed.features.care}</div>
+                        <div class="feature">❤️ ${breed.features.friendliness}</div>
+                    </div>
+                `;
+                container.appendChild(breedCard);
+            });
+        }
+
+        // Функция поиска
+        function setupSearch() {
+            const searchInput = document.querySelector('.search-input');
+            
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredBreeds = catBreeds.filter(breed => 
+                    breed.name.toLowerCase().includes(searchTerm) ||
+                    breed.origin.toLowerCase().includes(searchTerm) ||
+                    breed.description.toLowerCase().includes(searchTerm)
+                );
+                displayBreeds(filteredBreeds);
+            });
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            displayBreeds(catBreeds);
+            setupSearch();
+        });
+    </script>
+</body>
+</html>
